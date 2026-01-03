@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import pages.HomePage;
 import pages.LoginPage;
 import pages.RegisterPage;
 import pages.dialog.CommonDialog;
@@ -30,6 +31,7 @@ public class Register01_Verify_Register_Successfully extends BaseTest {
 
         WebDriver driver = DriverFactory.getDriver();
 
+        HomePage homePage = new HomePage(driver);
         RegisterPage registerPage = new RegisterPage(driver);
 
         //Step 1: Go to https://demo1.cybersoft.edu.vn/
@@ -43,9 +45,7 @@ public class Register01_Verify_Register_Successfully extends BaseTest {
 
         //Step 2: Click 'Đăng Ký' link on the top right
         System.out.println("Step 2: Click 'Đăng Ký' link on the top right");
-        By byLnkRegister = By.xpath("//a[h3[text()='Đăng Ký']]");
-        WebElement lnkRegister = wait.until(ExpectedConditions.visibilityOfElementLocated(byLnkRegister));
-        lnkRegister.click();
+        homePage.getTopBarNavigation().navigateRegisterPage();
 
         //Step 3: Enter account name
         System.out.println("Step 3: Enter account name");
@@ -84,9 +84,7 @@ public class Register01_Verify_Register_Successfully extends BaseTest {
         //VP2: Check login successfully with new created account
         System.out.println("VP2: Check login successfully with new created account");
         //9.1. Click 'Dang Nhap' link
-        By byLnkLogin = By.xpath("//a[h3[text()='Đăng Nhập']]");
-        WebElement lnkLogin = wait.until(ExpectedConditions.visibilityOfElementLocated(byLnkLogin));
-        lnkLogin.click();
+        registerPage.getTopBarNavigation().navigateLoginPage();
 
         //9.2. Enter account
         LoginPage loginPage = new LoginPage(driver);

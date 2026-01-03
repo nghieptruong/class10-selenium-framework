@@ -11,8 +11,11 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import pages.HomePage;
 import pages.LoginPage;
 import pages.dialog.CommonDialog;
+import reports.ExtentReportManager;
+
 import java.time.Duration;
 
 public class Login01_Verify_Login_Successfully extends BaseTest {
@@ -26,8 +29,11 @@ public class Login01_Verify_Login_Successfully extends BaseTest {
 
         WebDriver driver = DriverFactory.getDriver();
 
+        HomePage homePage = new HomePage(driver);
+
         //Step 1: Go to https://demo1.cybersoft.edu.vn/
-        System.out.println("Step 1: Go to https://demo1.cybersoft.edu.vn/");
+        LOG.info("Step 1: Go to https://demo1.cybersoft.edu.vn/");
+        ExtentReportManager.info("Step 1: Go to https://demo1.cybersoft.edu.vn/");
         driver.get("https://demo1.cybersoft.edu.vn/");
 
         Wait<WebDriver> wait = new FluentWait<>(driver)
@@ -36,33 +42,40 @@ public class Login01_Verify_Login_Successfully extends BaseTest {
                 .ignoring(NotFoundException.class);
 
         //Step 2: Click 'Đăng Nhap' link on the top right
-        System.out.println("Step 2: Click 'Đăng Nhap' link on the top right");
-        By byLnkLogin = By.xpath("//a[h3[text()='Đăng Nhập']]");
-        WebElement lnkLogin = wait.until(ExpectedConditions.visibilityOfElementLocated(byLnkLogin));
-        lnkLogin.click();
+        LOG.info("Step 2: Click 'Đăng Nhap' link on the top right");
+        ExtentReportManager.info("Step 2: Click 'Đăng Nhap' link on the top right");
+        homePage.getTopBarNavigation().navigateLoginPage();
 
         //Step 3: Enter account
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.enterAcount(account);
-
         //Step 4: Enter password
-        loginPage.enterPassword("Test123456@");
-
         //Step 5: Click 'Dang Nhap' button
-        loginPage.clickLogin();
+        LOG.info("Step 3: Enter account");
+        LOG.info("Step 4: Enter password");
+        LOG.info("Step 5: Click 'Dang Nhap' button");
+        ExtentReportManager.info("Step 3: Enter account");
+        ExtentReportManager.info("Step 4: Enter password");
+        ExtentReportManager.info("Step 5: Click 'Dang Nhap' button");
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login(account, "Test123456@");
 
         //Step 6: Verify user login successfully
         //VP1: Check 'Dang Nhap Thanh Cong' message display
+        LOG.info("Step 6: Verify user login successfully");
+        LOG.info("VP1: Check 'Dang Nhap Thanh Cong' message display");
+        ExtentReportManager.info("Step 6: Verify user login successfully");
+        ExtentReportManager.info("VP1: Check 'Dang Nhap Thanh Cong' message display");
         CommonDialog dialog = new CommonDialog(driver);
         String recordedLoginMsg = dialog.getTextMessage();
-        Assert.assertEquals(recordedLoginMsg, "Đăng nhập thành công", "Incorrect login message !");
+        Assert.assertEquals(recordedLoginMsg, "Đăng nhập thành công123", "Incorrect login message !");
 
         //VP2: Check 'Dang xuat' link display
-        By byLnkLogout = By.xpath("//a[h3[text()='Đăng xuất']]");
-        WebElement lnkLogout = wait.until(ExpectedConditions.visibilityOfElementLocated(byLnkLogout));
-        Assert.assertTrue(lnkLogout.isDisplayed(), "Logout out link not display !");
+        LOG.info("VP2: Check 'Dang xuat' link display");
+        ExtentReportManager.info("VP2: Check 'Dang xuat' link display");
+        Assert.assertTrue(homePage.getTopBarNavigation().isLogoutLinkDisplayed(), "Logout out link not display !");
 
         //VP3: Check user profile display on the top right
+        LOG.info("VP3: Check user profile display on the top right");
+        ExtentReportManager.info("VP3: Check user profile display on the top right");
         By byLblUserProfile = By.xpath("//a/h3[text()='" + fullname + "']");
         WebElement lblUserProfile = wait.until(ExpectedConditions.visibilityOfElementLocated(byLblUserProfile));
         Assert.assertTrue(lblUserProfile.isDisplayed(), "User profile not display !");
